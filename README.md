@@ -1,4 +1,4 @@
-Path Finder management pack for SCOM
+PathFinder management pack for SCOM
 ====================================
 
 Why?
