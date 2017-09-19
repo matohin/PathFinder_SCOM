@@ -1,0 +1,120 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<ManagementPack SchemaVersion="2.0" ContentReadable="true" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
+  <Manifest>
+    <Identity>
+      <ID>PathFinder</ID>
+      <Version>1.0.0.0</Version>
+    </Identity>
+    <Name>PathFinder</Name>
+    <References>
+      <Reference Alias="Windows">
+        <ID>Microsoft.Windows.Library</ID>
+        <Version>7.5.8501.0</Version>
+        <PublicKeyToken>31bf3856ad364e35</PublicKeyToken>
+      </Reference>
+      <Reference Alias="SPMTMv">
+        <ID>Sample.Powershell.Monitor.Type.MP.v2</ID>
+        <Version>1.0.1.19</Version>
+        <PublicKeyToken>e382b51e36d2ad54</PublicKeyToken>
+      </Reference>
+      <Reference Alias="Health">
+        <ID>System.Health.Library</ID>
+        <Version>7.0.8427.0</Version>
+        <PublicKeyToken>31bf3856ad364e35</PublicKeyToken>
+      </Reference>
+      <Reference Alias="System">
+        <ID>System.Library</ID>
+        <Version>7.5.8501.0</Version>
+        <PublicKeyToken>31bf3856ad364e35</PublicKeyToken>
+      </Reference>
+    </References>
+  </Manifest>
+  <Monitoring>
+    <Monitors>
+      <UnitMonitor ID="PathFinder.Path.Finder" Accessibility="Public" Enabled="true" Target="Windows!Microsoft.Windows.Computer" ParentMonitorID="Health!System.Health.ConfigurationState" Remotable="true" Priority="Normal" TypeID="SPMTMv!Wei.Out.There.TimedPowershell.v2.TwoStateMonitorType" ConfirmDelivery="false">
+        <Category>ConfigurationHealth</Category>
+        <AlertSettings AlertMessage="PathFinder.Path.Finder.AlertMessage">
+          <AlertOnState>Warning</AlertOnState>
+          <AutoResolve>true</AutoResolve>
+          <AlertPriority>Low</AlertPriority>
+          <AlertSeverity>MatchMonitorHealth</AlertSeverity>
+          <AlertParameters>
+            <AlertParameter1>$Data/Context/Property[@Name='Path']$</AlertParameter1>
+          </AlertParameters>
+        </AlertSettings>
+        <OperationalStates>
+          <OperationalState ID="Error" MonitorTypeStateID="Error" HealthState="Warning" />
+          <OperationalState ID="Success" MonitorTypeStateID="Success" HealthState="Success" />
+        </OperationalStates>
+        <Configuration>
+          <IntervalSeconds>600</IntervalSeconds>
+          <SyncTime>9:00</SyncTime>
+          <TimeoutSeconds>100</TimeoutSeconds>
+          <ScriptName>TestPath.ps1</ScriptName>
+          <ScriptBody>
+    #=============CHANGE PATH TO DETECT HERE========
+    $Path = "C:\Program Files (x86)\Notepad++"
+    #===============================================
+    $PathFound = Test-Path($Path)
+    $api = new-object -comObject 'MOM.ScriptAPI'
+    $bag = $api.CreatePropertyBag()
+    $bag.AddValue('PathFound', $PathFound)
+    $bag.AddValue('Path', $Path)
+    $bag
+  </ScriptBody>
+          <ErrorExpression>
+            <SimpleExpression>
+              <ValueExpression>
+                <XPathQuery Type="Boolean">Property[@Name="PathFound"]</XPathQuery>
+              </ValueExpression>
+              <Operator>Equal</Operator>
+              <ValueExpression>
+                <Value Type="Boolean">true</Value>
+              </ValueExpression>
+            </SimpleExpression>
+          </ErrorExpression>
+          <SuccessExpression>
+            <SimpleExpression>
+              <ValueExpression>
+                <XPathQuery Type="Boolean">Property[@Name="PathFound"]</XPathQuery>
+              </ValueExpression>
+              <Operator>NotEqual</Operator>
+              <ValueExpression>
+                <Value Type="Boolean">true</Value>
+              </ValueExpression>
+            </SimpleExpression>
+          </SuccessExpression>
+        </Configuration>
+      </UnitMonitor>
+    </Monitors>
+  </Monitoring>
+  <Presentation>
+    <StringResources>
+      <StringResource ID="PathFinder.Path.Finder.AlertMessage" />
+    </StringResources>
+  </Presentation>
+  <LanguagePacks>
+    <LanguagePack ID="ENU" IsDefault="true">
+      <DisplayStrings>
+        <DisplayString ElementID="PathFinder.Path.Finder">
+          <Name>PathFinder</Name>
+          <Description>Finds an arbitrary path on each widows computer using a Test-Path commandlet.</Description>
+        </DisplayString>
+        <DisplayString ElementID="PathFinder.Path.Finder.AlertMessage">
+          <Name>PathFinder found a path</Name>
+          <Description>The path in question is found in this machine.
+Path is {0}</Description>
+        </DisplayString>
+        <DisplayString ElementID="PathFinder.Path.Finder" SubElementID="Error">
+          <Name>Error</Name>
+          <Description>Error</Description>
+        </DisplayString>
+        <DisplayString ElementID="PathFinder.Path.Finder" SubElementID="Success">
+          <Name>Success</Name>
+          <Description>Success</Description>
+        </DisplayString>
+      </DisplayStrings>
+      <KnowledgeArticles></KnowledgeArticles>
+    </LanguagePack>
+  </LanguagePacks>
+</ManagementPack>

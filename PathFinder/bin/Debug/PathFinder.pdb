@@ -1,0 +1,6 @@
+PathFinder.mptg.mpx*PathFinder.Path.Finder*6*8*UnitMonitor
+PathFinder.mptg.mpx*PathFinder.Path.Finder.AlertMessage*65*8*StringResource
+PathFinder.mptg.mpx*PathFinder.Path.Finder*71*10*DisplayString
+PathFinder.mptg.mpx*PathFinder.Path.Finder.AlertMessage*75*10*DisplayString
+PathFinder.mptg.mpx*PathFinder.Path.Finder*80*10*DisplayString*SubElementID*Error
+PathFinder.mptg.mpx*PathFinder.Path.Finder*84*10*DisplayString*SubElementID*Success

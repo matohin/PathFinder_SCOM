@@ -1,0 +1,52 @@
+<TemplateGroup>
+  <Instances>
+    <Instance ID="Instance1cb8bbbf42bb4bd8ba0ce5a2d4aaa2da" Type="Microsoft.SystemCenter.Authoring.CodeGeneration.Monitoring.UnitMonitor" Version="1.0.0.0">
+      <UnitMonitorConfig xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
+        <MonitorType>SPMTMv!Wei.Out.There.TimedPowershell.v2.TwoStateMonitorType</MonitorType>
+        <MonitorConfig>&lt;IntervalSeconds&gt;600&lt;/IntervalSeconds&gt;&lt;SyncTime&gt;9:00&lt;/SyncTime&gt;&lt;TimeoutSeconds&gt;100&lt;/TimeoutSeconds&gt;&lt;ScriptName&gt;TestPath.ps1&lt;/ScriptName&gt;&lt;ScriptBody&gt;
+    #=============CHANGE PATH TO DETECT HERE========
+    $Path = "C:\Program Files (x86)\Notepad++"
+    #===============================================
+    $PathFound = Test-Path($Path)
+    $api = new-object -comObject 'MOM.ScriptAPI'
+    $bag = $api.CreatePropertyBag()
+    $bag.AddValue('PathFound', $PathFound)
+    $bag.AddValue('Path', $Path)
+    $bag
+  &lt;/ScriptBody&gt;&lt;ErrorExpression&gt;&lt;SimpleExpression&gt;&lt;ValueExpression&gt;&lt;XPathQuery Type="Boolean"&gt;Property[@Name="PathFound"]&lt;/XPathQuery&gt;&lt;/ValueExpression&gt;&lt;Operator&gt;Equal&lt;/Operator&gt;&lt;ValueExpression&gt;&lt;Value Type="Boolean"&gt;true&lt;/Value&gt;&lt;/ValueExpression&gt;&lt;/SimpleExpression&gt;&lt;/ErrorExpression&gt;&lt;SuccessExpression&gt;&lt;SimpleExpression&gt;&lt;ValueExpression&gt;&lt;XPathQuery Type="Boolean"&gt;Property[@Name="PathFound"]&lt;/XPathQuery&gt;&lt;/ValueExpression&gt;&lt;Operator&gt;NotEqual&lt;/Operator&gt;&lt;ValueExpression&gt;&lt;Value Type="Boolean"&gt;true&lt;/Value&gt;&lt;/ValueExpression&gt;&lt;/SimpleExpression&gt;&lt;/SuccessExpression&gt;</MonitorConfig>
+        <MonitorOperationalStates>
+          <OperationalState>
+            <OperationalStateId>Error</OperationalStateId>
+            <OperationalStateDisplayName>Error</OperationalStateDisplayName>
+            <MonitorTypeStateId>Error</MonitorTypeStateId>
+            <HealthState>Warning</HealthState>
+          </OperationalState>
+          <OperationalState>
+            <OperationalStateId>Success</OperationalStateId>
+            <OperationalStateDisplayName>Success</OperationalStateDisplayName>
+            <MonitorTypeStateId>Success</MonitorTypeStateId>
+            <HealthState>Success</HealthState>
+          </OperationalState>
+        </MonitorOperationalStates>
+        <ParentMonitor>Health!System.Health.ConfigurationState</ParentMonitor>
+        <Accessibility>Public</Accessibility>
+        <Id>Path.Finder</Id>
+        <DisplayName>PathFinder</DisplayName>
+        <Description>Finds an arbitrary path on each widows computer using a Test-Path commandlet.</Description>
+        <Target>Windows!Microsoft.Windows.Computer</Target>
+        <Enabled>true</Enabled>
+        <Category>ConfigurationHealth</Category>
+        <Remotable>true</Remotable>
+        <Priority>Normal</Priority>
+        <AlertAutoResolve>true</AlertAutoResolve>
+        <AlertOnState>Warning</AlertOnState>
+        <AlertPriority>Low</AlertPriority>
+        <AlertSeverity>MatchMonitorHealth</AlertSeverity>
+        <AlertName>PathFinder found a path</AlertName>
+        <AlertDescription>The path in question is found in this machine.
+Path is $Data/Context/Property[@Name='Path']$</AlertDescription>
+        <ConfirmDelivery>false</ConfirmDelivery>
+      </UnitMonitorConfig>
+    </Instance>
+  </Instances>
+</TemplateGroup>
